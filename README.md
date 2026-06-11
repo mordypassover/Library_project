@@ -16,6 +16,7 @@ can be added updated and red.
 - uvicorn
 - logging
 - MySQL
+- mysql-connector-python
 - Docker
 
 file build
@@ -216,7 +217,7 @@ go to project directory in bash:
   cd project_path
 
 in project directory:
-  pip install FastAPI, uvicorn
+  pip install FastAPI uvicorn mysql-connector-python
 
 then:
 
