@@ -200,3 +200,30 @@ after validation, member is added to members table.
    system validates that the genre is valid. the system creates 
    book borrowed_by_member_id=Null and is_available=True then returns the
    created books id.
+
+
+## Installation
+
+clone project url:
+  https://github.com/mordypassover/Library_project.git
+
+install:
+- Python
+- MySQL
+- Docker
+
+go to project directory in bash:
+  cd project_path
+
+in project directory:
+  pip install FastAPI, uvicorn
+
+then:
+
+  docker run --name your_mysql_name \
+  -e MYSQL_ROOT_PASSWORD=your_mysql_password\
+  -e MYSQL_DATABASE=library_db -p 3306:3306 -d mysql:8
+
+finally, in project directory in bash run:
+  python main.py
+
