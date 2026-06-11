@@ -172,4 +172,27 @@ after validation, member is added to members table.
 ## System Flow
 
 1. Server Startup:
-   the server creates an instance of MemberDB and BooksDB, gives them 
+   
+   the server connects to mysql creates tables if they don't 
+   exist and creates an instance of MemberDB and BooksDB, then 
+   starts FastAPI server.
+
+2. Creating a Member:
+   
+   user sends POST request to /members with name and email, the 
+   system validates that the email is unique. the system creates 
+   member with is_active=True and total_borrows=0 and returns the
+   created members id.
+
+3. Borrowing a Book:
+
+   User sends put request to /books/{id}/borrow/{member_id}, the
+   system checks if book exists then checks if the member
+   exists and is active. the system checks if book is available
+   then checks if member has less than 3 books if not, updates
+   book: is_available=False, borrowed_by_member_id=member_id
+   and increments member's total_borrows by 1 and returns
+   success message to user.
+
+
+   
