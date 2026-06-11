@@ -194,5 +194,9 @@ after validation, member is added to members table.
    and increments member's total_borrows by 1 and returns
    success message to user.
 
-
+4. adding a book:
    
+   user sends POST request to /books with  book name, author and genre, the 
+   system validates that the genre is valid. the system creates 
+   book borrowed_by_member_id=Null and is_available=True then returns the
+   created books id.
