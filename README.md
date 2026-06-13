@@ -98,7 +98,7 @@ db name : library_db
 |-------------|-----------|-------------|-------------|
 |   is_active | bool      |  not Null   | active check|
 |-------------|-----------|-------------|-------------|
-|total_borrows|` boll     |   not Null  |availability | 
+|total_borrows|` int      |   not Null  |num of borrows|
 |-------------|-----------|-------------|-------------|
 
 
