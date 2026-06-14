@@ -66,3 +66,15 @@ def deactivate_member(id):
     finally:
         if conn:
             conn.close()
+
+@router.put("/members/{id}/activate")
+def activate_member(id):
+    conn = False
+    try:
+        conn = connector.get_connection_to_db()
+        return mdbm.activate_member(id, conn)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    finally:
+        if conn:
+            conn.close()

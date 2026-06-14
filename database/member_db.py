@@ -53,7 +53,7 @@ class MemberDBManager:
         self.update_member(id,{"is_active":False}, conn)
 
     def activate_member(self, id, conn):
-        pass
+        self.update_member(id, {"is_active": True}, conn)
 
     def increment_borrows(self, id, conn):
         pass
