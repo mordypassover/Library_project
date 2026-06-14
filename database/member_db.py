@@ -50,7 +50,7 @@ class MemberDBManager:
         return is_success
 
     def deactivate_member(self, id, conn):
-        pass
+        self.update_member(id,{"is_active":False}, conn)
 
     def activate_member(self, id, conn):
         pass
