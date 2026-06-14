@@ -5,7 +5,7 @@ bdbm = BooksDBManager()
 
 router = APIRouter()
 
-@router.post("/books")
+@router.post("/books",status_code=201)
 def add_book_to_library(data:dict = Body(...)):
     try:
         title:str = data["title"]
