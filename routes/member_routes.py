@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Body, HTTPException
 from database.member_db import MemberDBManager
 from database.db_connection import DBConnection
+from mysql.connector import errors
 
 mdbm = MemberDBManager()
 
@@ -14,7 +15,7 @@ def add_member_to_library(data:dict = Body(...)):
     try:
         conn = connector.get_connection_to_db()
         mdbm.create_member(data,conn)
-    except KeyError as e:
+    except (KeyError, errors.IntegrityError) as e:
         raise HTTPException(status_code=400, detail=str(e))
     finally:
         if conn:
