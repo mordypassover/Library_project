@@ -1,13 +1,23 @@
-from db_connection import get_connection_to_db
+from database.db_connection import get_connection_to_db
 
 
 class BooksDBManager:
+    GENRE_TYPES = ('fiction', 'non-fiction', 'science', 'history', 'other')
     def __init__(self):
-        connector = get_connection_to_db
+        self.connector = get_connection_to_db
 
 
-    def create_book(self, data):
-        pass
+    def create_book(self,title, author, genre):
+        conn =self.connector()
+        cursor = conn.cursor()
+        query = "INSERT INTO books(title, author, genre) VALUES (%s,%s, %s)"
+        cursor.execute(query, (title, author, genre))
+        new_book = cursor.lastrowid
+        conn.commit()
+        cursor.close()
+        conn.close()
+        return new_book
+
 
     def get_all_books(self):
         pass
