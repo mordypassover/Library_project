@@ -1,48 +1,38 @@
-from database.db_connection import get_connection_to_db
-
-
 class BooksDBManager:
     GENRE_TYPES = ('fiction', 'non-fiction', 'science', 'history', 'other')
     def __init__(self):
-        self.connector = get_connection_to_db
+        pass
 
-
-    def create_book(self,title, author, genre):
-        conn =self.connector()
+    def create_book(self,title, author, genre, conn):
         cursor = conn.cursor()
         query = "INSERT INTO books(title, author, genre) VALUES (%s,%s, %s)"
         cursor.execute(query, (title, author, genre))
         new_book = cursor.lastrowid
         conn.commit()
         cursor.close()
-        conn.close()
         return new_book
 
 
-    def get_all_books(self):
-        conn = self.connector()
+    def get_all_books(self, conn):
         cursor = conn.cursor(dictionary=True)
         query = "SELECT * FROM books"
         cursor.execute(query)
         all_books = cursor.fetchall()
         cursor.close()
-        conn.close()
         return all_books
 
-    def get_book_by_id(self, id):
-        conn = self.connector()
+    def get_book_by_id(self, id, conn):
         cursor = conn.cursor(dictionary=True)
         query = "SELECT * FROM books WHERE id = %s"
         cursor.execute(query, (id,))
         book = cursor.fetchone()
         cursor.close()
-        conn.close()
 
         if not book:
             raise ValueError("book id not valid")
         return book
 
-    def update_book(self, id, data):
+    def update_book(self, id, data, conn):
         data_key_to_list = []
         for i in data.keys():
             if i not in {"title", "author", "genre", "is_available", "id_member_by_borrowed"}:
@@ -51,7 +41,6 @@ class BooksDBManager:
 
         keys_string = ", ".join(data_key_to_list)
 
-        conn = self.connector()
         cursor = conn.cursor()
         query = f"UPDATE books SET {keys_string} WHERE id = %s"
         params = [data[val] for val in data.keys()]
@@ -59,25 +48,22 @@ class BooksDBManager:
         is_success = cursor.rowcount > 0
         conn.commit()
         cursor.close()
-        conn.close()
         return is_success
 
-    def check_borrowed_books(self,member_id):
-        conn = self.connector()
+    def check_borrowed_books(self,member_id, conn):
         cursor = conn.cursor()
         query = "SELECT COUNT(id) AS MemberBooks FROM books WHERE id_member_by_borrowed = %s"
         cursor.execute(query, (member_id,))
         books_borrowed = cursor.fetchone()
         cursor.close()
-        conn.close()
         return books_borrowed < 3
 
-    def set_available(self, id, val, member_id):
-        book = self.get_book_by_id(id)
-        if not val and book["is_valid"] and self.check_borrowed_books(member_id):
-            return self.update_book(id,{"is_available":val, "id_member_by_borrowed":member_id})
+    def set_available(self, id, val, member_id, conn):
+        book = self.get_book_by_id(id, conn)
+        if not val and book["is_valid"] and self.check_borrowed_books(member_id, conn):
+            return self.update_book(id,{"is_available":val, "id_member_by_borrowed":member_id}, conn)
         elif val and book["id_member_by_borrowed"] == member_id:
-            return self.update_book(id, {"is_available":val, "id_member_by_borrowed":None})
+            return self.update_book(id, {"is_available":val, "id_member_by_borrowed":None}, conn)
         else:
             raise ValueError("unable to change data do to one or more data errors")
 

@@ -1,20 +1,17 @@
-from database.db_connection import get_connection_to_db
 
 class MemberDBManager:
     def __init__(self):
-        self.connector = get_connection_to_db
+        pass
 
-    def create_member(self, data):
+    def create_member(self, data, conn):
         if not ("name" in data and "email" in data):
             raise KeyError("input not valid")
-        conn = self.connector()
         cursor =conn.cursor()
         query = "INSERT INTO members(name, email) VALUES (%s, %s)"
         cursor.execute(query,(data["name"], data["email"]))
         new_id = cursor.lastrowid
         conn.commit()
         cursor.close()
-        conn.close()
         return new_id
 
     def get_all_members(self):
