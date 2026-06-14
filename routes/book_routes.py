@@ -32,3 +32,17 @@ def update_book_via_id(id:int, data:dict = Body(...)):
         return bdbm.update_book(id, data)
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
+
+@router.put("/books/{id}/borrow/{member_id}")
+def borrow_book(id, member_id):
+    try:
+        return bdbm.set_available(id, True, member_id)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+
+@router.put("/books/{id}/return/{member_id}")
+def return_book(id, member_id):
+    try:
+        return bdbm.set_available(id, True, member_id)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))

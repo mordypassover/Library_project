@@ -62,9 +62,26 @@ class BooksDBManager:
         conn.close()
         return is_success
 
+    def check_borrowed_books(self,member_id):
+        conn = self.connector()
+        cursor = conn.cursor()
+        query = "SELECT COUNT(id) AS MemberBooks FROM books WHERE id_member_by_borrowed = %s"
+        cursor.execute(query, (member_id,))
+        books_borrowed = cursor.fetchone()
+        cursor.close()
+        conn.close()
+        return books_borrowed < 3
 
     def set_available(self, id, val, member_id):
-        pass
+        book = self.get_book_by_id(id)
+        if not val and book["is_valid"] and self.check_borrowed_books(member_id):
+            return self.update_book(id,{"is_available":val, "id_member_by_borrowed":member_id})
+        elif val and book["id_member_by_borrowed"] == member_id:
+            return self.update_book(id, {"is_available":val, "id_member_by_borrowed":None})
+        else:
+            raise ValueError("unable to change data do to one or more data errors")
+
+
 
     def books_total_count(self):
         pass
