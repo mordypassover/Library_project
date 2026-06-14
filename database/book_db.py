@@ -43,7 +43,25 @@ class BooksDBManager:
         return book
 
     def update_book(self, id, data):
-        pass
+        data_key_to_list = []
+        for i in data.keys():
+            if i not in {"title", "author", "genre", "is_available", "id_member_by_borrowed"}:
+                raise KeyError(f"data column {i} not supported")
+            data_key_to_list.append(f"{i}=%s")
+
+        keys_string = ", ".join(data_key_to_list)
+
+        conn = self.connector()
+        cursor = conn.cursor()
+        query = f"UPDATE books SET {keys_string} WHERE id = %s"
+        params = [data[val] for val in data.keys()]
+        cursor.execute(query, params+ [id])
+        is_success = cursor.rowcount > 0
+        conn.commit()
+        cursor.close()
+        conn.close()
+        return is_success
+
 
     def set_available(self, id, val, member_id):
         pass
