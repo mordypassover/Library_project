@@ -20,7 +20,15 @@ class BooksDBManager:
 
 
     def get_all_books(self):
-        pass
+        conn = self.connector()
+        cursor = conn.cursor(dictionary=True)
+        query = "SELECT * FROM books"
+        cursor.execute(query)
+        all_books = cursor.fetchall()
+        conn.commit()
+        cursor.close()
+        conn.close()
+        return all_books
 
     def get_book_by_id(self, id):
         pass
