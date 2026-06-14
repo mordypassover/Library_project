@@ -18,7 +18,7 @@ def create_books_and_members_tables():
              "name VARCHAR(50) NOT NULL,"
              "email VARCHAR(50) NOT NULL UNIQUE,"
              "is_active BOOLEAN DEFAULT TRUE NOT NULL,"
-             "total_borrows INT NOT NULL)",
+             "total_borrows INT DEFAULT 0 NOT NULL)",
              "CREATE TABLE IF NOT EXISTS books ("
              "id INT PRIMARY KEY AUTO_INCREMENT,"
              "title VARCHAR(50) NOT NULL,"
