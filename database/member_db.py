@@ -14,26 +14,31 @@ class MemberDBManager:
         cursor.close()
         return new_id
 
-    def get_all_members(self):
+    def get_all_members(self, conn):
+        cursor = conn.cursor()
+        query = "SELECT * FROM members"
+        cursor.execute(query)
+        all_members = cursor.fetchall()
+        cursor.close()
+        return all_members
+
+    def get_member_by_id(self, id, conn):
         pass
 
-    def get_member_by_id(self, id):
+    def update_member(self, conn):
         pass
 
-    def update_member(self):
+    def deactivate_member(self, id, conn):
         pass
 
-    def deactivate_member(self, id):
+    def activate_member(self, id, conn):
         pass
 
-    def activate_member(self, id):
+    def increment_borrows(self, id, conn):
         pass
 
-    def increment_borrows(self, id):
+    def count_active_members(self, conn):
         pass
 
-    def count_active_members(self):
-        pass
-
-    def get_top_member(self):
+    def get_top_member(self, conn):
         pass

@@ -20,3 +20,12 @@ def add_member_to_library(data:dict = Body(...)):
     finally:
         if conn:
             conn.close()
+
+@router.get("/members")
+def get_all_members():
+    conn = False
+    try:
+        conn = connector.get_connection_to_db()
+        return mdbm.get_all_members(conn)
+    finally:
+        conn.close()
