@@ -25,13 +25,22 @@ class BooksDBManager:
         query = "SELECT * FROM books"
         cursor.execute(query)
         all_books = cursor.fetchall()
-        conn.commit()
         cursor.close()
         conn.close()
         return all_books
 
     def get_book_by_id(self, id):
-        pass
+        conn = self.connector()
+        cursor = conn.cursor(dictionary=True)
+        query = "SELECT * FROM books WHERE id = %s"
+        cursor.execute(query, (id,))
+        book = cursor.fetchone()
+        cursor.close()
+        conn.close()
+
+        if not book:
+            raise ValueError("book id not valid")
+        return book
 
     def update_book(self, id, data):
         pass

@@ -18,3 +18,10 @@ def add_book_to_library(data:dict = Body(...)):
 @router.get("/books")
 def get_all_books():
     return bdbm.get_all_books()
+
+@router.get("/books/{id}")
+def get_book_via_id(id:int):
+    try:
+        return bdbm.get_book_by_id(id)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
