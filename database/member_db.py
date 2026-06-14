@@ -15,7 +15,7 @@ class MemberDBManager:
         return new_id
 
     def get_all_members(self, conn):
-        cursor = conn.cursor()
+        cursor = conn.cursor(dictionary= True)
         query = "SELECT * FROM members"
         cursor.execute(query)
         all_members = cursor.fetchall()
@@ -30,12 +30,24 @@ class MemberDBManager:
         cursor.close()
         if not member:
             raise ValueError(f"member id-{id} not valid")
-
-
         return member
 
-    def update_member(self, conn):
-        pass
+    def update_member(self, id, data, conn):
+        data_key_to_list = []
+        for i in data.keys():
+            if i not in {"name", "email", "is_active", "total_borrows"}:
+                raise KeyError(f"field {i} not supported in members")
+            data_key_to_list.append(f"{i}=%s")
+        key_str = ", ".join(data_key_to_list)
+
+        cursor = conn.cursor()
+        query = f"UPDATE members SET {key_str} WHERE id = %s"
+        vals = [data[val] for val in data.keys()]
+        cursor.execute(query, vals + [id])
+        is_success = cursor.rowcount > 0
+        conn.commit()
+        cursor.close()
+        return is_success
 
     def deactivate_member(self, id, conn):
         pass

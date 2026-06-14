@@ -41,3 +41,16 @@ def get_book_via_id(id:int):
     finally:
         if conn:
             conn.close()
+
+@router.put("/members/{id}")
+
+def update_member_by_id(id,  data:dict = Body(...)):
+    conn = False
+    try:
+        conn = connector.get_connection_to_db()
+        return mdbm.update_member(id, data, conn)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    finally:
+        if conn:
+            conn.close()
