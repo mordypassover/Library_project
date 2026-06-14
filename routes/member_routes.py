@@ -29,3 +29,15 @@ def get_all_members():
         return mdbm.get_all_members(conn)
     finally:
         conn.close()
+
+@router.get("/members/{id}")
+def get_book_via_id(id:int):
+    conn = False
+    try:
+        conn = connector.get_connection_to_db()
+        return mdbm.get_member_by_id(id, conn)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    finally:
+        if conn:
+            conn.close()

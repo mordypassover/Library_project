@@ -23,7 +23,16 @@ class MemberDBManager:
         return all_members
 
     def get_member_by_id(self, id, conn):
-        pass
+        cursor = conn.cursor(dictionary=True)
+        query = "SELECT * FROM members WHERE id = %s"
+        cursor.execute(query, (id,))
+        member = cursor.fetchone()
+        cursor.close()
+        if not member:
+            raise ValueError(f"member id-{id} not valid")
+
+
+        return member
 
     def update_member(self, conn):
         pass
