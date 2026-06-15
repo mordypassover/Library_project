@@ -57,7 +57,7 @@ class MemberDBManager:
 
     def increment_borrows(self, id, conn):
         cursor = conn.cursor()
-        query = "UPDATE members SET total_borrows =total_borrows+1  INCREMENT WHERE id = %s"
+        query = "UPDATE members SET total_borrows =total_borrows+1 WHERE id = %s"
         cursor.execute(query, (id,))
         conn.commit()
         cursor.close()

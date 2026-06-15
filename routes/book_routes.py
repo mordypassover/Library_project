@@ -60,20 +60,22 @@ def update_book_via_id(id:int, data:dict = Body(...)):
             conn.close()
 
 @router.put("/books/{id}/borrow/{member_id}")
-def borrow_book(id, member_id):
+def borrow_book(id:int, member_id:int):
     conn = False
     try:
         conn = connector.get_connection_to_db()
-        return bdbm.set_available(id, True, member_id, conn)
+        update_success =  bdbm.set_available(id, False, member_id, conn)
+        mdbm.increment_borrows(member_id, conn)
+        return update_success
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
     finally:
+
         if conn:
-            mdbm.increment_borrows(member_id, conn)
             conn.close()
 
 @router.put("/books/{id}/return/{member_id}")
-def return_book(id, member_id):
+def return_book(id:int, member_id:int):
     conn = False
     try:
         conn = connector.get_connection_to_db()
