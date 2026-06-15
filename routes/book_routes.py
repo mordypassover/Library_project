@@ -70,7 +70,6 @@ def borrow_book(id:int, member_id:int):
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
     finally:
-
         if conn:
             conn.close()
 

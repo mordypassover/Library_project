@@ -1,3 +1,9 @@
+from database.member_db import MemberDBManager
+
+
+mdbm = MemberDBManager()
+
+
 class BooksDBManager:
     GENRE_TYPES = ('fiction', 'non-fiction', 'science', 'history', 'other')
     def __init__(self):
@@ -53,12 +59,20 @@ class BooksDBManager:
     def set_available(self, id, val, member_id, conn):
         book = self.get_book_by_id(id, conn)
         borrowed_books =  self.count_borrowed_books(member_id, conn)
-        if (not val) and book["is_available"] and borrowed_books:
+        member= mdbm.get_member_by_id(member_id, conn)
+        if not val:
+            if not book["is_available"]:
+                raise ValueError("book not available")
+            if not borrowed_books:
+                raise ValueError(f"member {member_id} passed max borrows")
+            if not member["is_active"]:
+                raise ValueError(f"member {member_id} not active")
             return self.update_book(id,{"is_available":val, "id_member_by_borrowed":member_id}, conn)
-        elif val and book["id_member_by_borrowed"] == member_id:
+        elif val:
+            if not book["id_member_by_borrowed"] == member_id:
+                raise ValueError(f" book {id} not borrowed by member {member_id}")
             return self.update_book(id, {"is_available":val, "id_member_by_borrowed":None}, conn)
-        else:
-            raise ValueError("unable to change data do to one or more data errors")
+
 
     def books_total_count(self):
         pass
