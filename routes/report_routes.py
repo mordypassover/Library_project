@@ -13,11 +13,28 @@ connector = DBConnection()
 
 @router.get("/reports/summary")
 def get_summery():
-    pass
+    conn = False
+    try:
+        conn = connector.get_connection_to_db()
+        return [bdbm.books_total_count(conn),
+                bdbm.count_available_books(conn),
+                bdbm.count_borrowed_books(conn),
+                mdbm.count_active_members(conn)]
+    finally:
+        if conn:
+            conn.close()
 
 @router.get("/reports/books-by-genre")
-def get_book_by_gener(enre:str):
-    pass
+def get_book_by_gener(genre:str):
+    conn = False
+    try:
+        conn = connector.get_connection_to_db()
+        return bdbm.count_by_genre(genre, conn)
+    except TypeError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    finally:
+        if conn:
+            conn.close()
 
 @router.get("/reports/top-member")
 def get_top_member():
