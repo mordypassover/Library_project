@@ -3,9 +3,9 @@ import mysql.connector
 
 class DBConnection:
     def __init__(self):
-        self.user = "root",
-        self.password = "root1",
-        self.database = "library_db",
+        self.user = "root"
+        self.password = "root1"
+        self.database = "library_db"
         self.host = "LocalHost"
         self.create_books_and_members_tables()
 

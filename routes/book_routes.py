@@ -1,8 +1,10 @@
 from fastapi import APIRouter, Body, HTTPException
 from database.book_db import BooksDBManager
+from database.member_db import MemberDBManager
 from database.db_connection import DBConnection
 
 bdbm = BooksDBManager()
+mdbm = MemberDBManager()
 
 router = APIRouter()
 
@@ -67,6 +69,7 @@ def borrow_book(id, member_id):
         raise HTTPException(status_code=404, detail=str(e))
     finally:
         if conn:
+            mdbm.increment_borrows(member_id, conn)
             conn.close()
 
 @router.put("/books/{id}/return/{member_id}")

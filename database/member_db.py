@@ -56,10 +56,20 @@ class MemberDBManager:
         self.update_member(id, {"is_active": True}, conn)
 
     def increment_borrows(self, id, conn):
-        pass
+        cursor = conn.cursor()
+        query = "UPDATE members SET total_borrows =total_borrows+1  INCREMENT WHERE id = %s"
+        cursor.execute(query, (id,))
+        conn.commit()
+        cursor.close()
+
 
     def count_active_members(self, conn):
         pass
 
     def get_top_member(self, conn):
-        pass
+        cursor = conn.cursor()
+        query = "SELECT MAX(total_borrows) AS max_member FROM members"
+        cursor.execute(query)
+        max_member = cursor.lastrowid
+        cursor.close()
+        return max_member
