@@ -64,7 +64,12 @@ class MemberDBManager:
 
 
     def count_active_members(self, conn):
-        pass
+        cursor = conn.cursor(dictionary=True)
+        query = "SELECT COUNT(*) FROM members WHERE is_active = TRUE"
+        cursor.execute(query)
+        are_active = cursor.fetchone()
+        cursor.close()
+        return are_active
 
     def get_top_member(self, conn):
         cursor = conn.cursor(dictionary=True)
