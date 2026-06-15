@@ -67,9 +67,9 @@ class MemberDBManager:
         pass
 
     def get_top_member(self, conn):
-        cursor = conn.cursor()
-        query = "SELECT MAX(total_borrows) AS max_member FROM members"
+        cursor = conn.cursor(dictionary=True)
+        query = "SELECT name, total_borrows FROM members ORDER BY total_borrows DESC LIMIT 1"
         cursor.execute(query)
-        max_member = cursor.lastrowid
+        max_member = cursor.fetchone()
         cursor.close()
         return max_member
