@@ -16,10 +16,10 @@ def get_summery():
     conn = False
     try:
         conn = connector.get_connection_to_db()
-        return [bdbm.books_total_count(conn),
-                bdbm.count_available_books(conn),
-                bdbm.count_borrowed_books(conn),
-                mdbm.count_active_members(conn)]
+        return {"total_books":bdbm.books_total_count(conn)[0],
+                "available_books":bdbm.count_available_books(conn)[0],
+                "currently_borrowed":bdbm.count_borrowed_books(conn)[0],
+                "active_members": mdbm.count_active_members(conn)[0]}
     finally:
         if conn:
             conn.close()
@@ -29,7 +29,7 @@ def get_book_by_gener(genre:str):
     conn = False
     try:
         conn = connector.get_connection_to_db()
-        return bdbm.count_by_genre(genre, conn)
+        return {genre:bdbm.count_by_genre(genre, conn)}
     except TypeError as e:
         raise HTTPException(status_code=400, detail=str(e))
     finally:
