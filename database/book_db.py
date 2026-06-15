@@ -75,7 +75,7 @@ class BooksDBManager:
 
 
     def books_total_count(self, conn):
-        cursor = conn.cursor(dictionary=True)
+        cursor = conn.cursor()
         query = "SELECT COUNT(*) FROM books"
         cursor.execute(query)
         all_count = cursor.fetchone()
@@ -83,7 +83,7 @@ class BooksDBManager:
         return all_count
 
     def count_available_books(self, conn):
-        cursor = conn.cursor(dictionary=True)
+        cursor = conn.cursor()
         query = "SELECT COUNT(*) FROM books WHERE is_available= TRUE"
         cursor.execute(query)
         are_available = cursor.fetchone()
@@ -91,7 +91,7 @@ class BooksDBManager:
         return are_available
 
     def count_borrowed_books(self, conn):
-        cursor = conn.cursor(dictionary=True)
+        cursor = conn.cursor()
         query = "SELECT COUNT(*) FROM books WHERE is_available= FALSE"
         cursor.execute(query)
         books_borrowed = cursor.fetchone()
