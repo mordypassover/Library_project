@@ -64,7 +64,7 @@ class MemberDBManager:
 
 
     def count_active_members(self, conn):
-        cursor = conn.cursor(dictionary=True)
+        cursor = conn.cursor()
         query = "SELECT COUNT(*) FROM members WHERE is_active = TRUE"
         cursor.execute(query)
         are_active = cursor.fetchone()
