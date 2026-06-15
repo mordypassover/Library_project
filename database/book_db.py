@@ -58,7 +58,7 @@ class BooksDBManager:
 
     def set_available(self, id, val, member_id, conn):
         book = self.get_book_by_id(id, conn)
-        borrowed_books =  self.count_borrowed_books(member_id, conn)
+        borrowed_books =  self.count_active_borrows_by_member(member_id, conn) < 3
         member= mdbm.get_member_by_id(member_id, conn)
         if not val:
             if not book["is_available"]:
@@ -74,22 +74,43 @@ class BooksDBManager:
             return self.update_book(id, {"is_available":val, "id_member_by_borrowed":None}, conn)
 
 
-    def books_total_count(self):
-        pass
+    def books_total_count(self, conn):
+        cursor = conn.cursor(dictionary=True)
+        query = "SELECT COUNT(*) FROM books"
+        cursor.execute(query)
+        all_count = cursor.fetchone()
+        cursor.close()
+        return all_count
 
-    def count_available_books(self):
-        pass
+    def count_available_books(self, conn):
+        cursor = conn.cursor(dictionary=True)
+        query = "SELECT COUNT(*) FROM books WHERE is_available= TRUE"
+        cursor.execute(query)
+        are_available = cursor.fetchone()
+        cursor.close()
+        return are_available
 
-    def count_borrowed_books(self, member_id, conn):
-        cursor = conn.cursor()
-        query = "SELECT COUNT(id_member_by_borrowed) books WHERE id_member_by_borrowed = %s"
-        cursor.execute(query, (member_id,))
-        books_borrowed = cursor.fetchone
+    def count_borrowed_books(self, conn):
+        cursor = conn.cursor(dictionary=True)
+        query = "SELECT COUNT(*) FROM books WHERE is_available= FALSE"
+        cursor.execute(query)
+        books_borrowed = cursor.fetchone()
         cursor.close()
         return books_borrowed
 
-    def count_by_genre(self, genre):
-        pass
 
-    def count_active_borrows_by_member(self, member_id):
-        pass
+    def count_by_genre(self, genre, conn):
+        cursor = conn.cursor(dictionary=True)
+        query = "SELECT COUNT(*) FROM books WHERE genre = %s"
+        cursor.execute(query, (genre,))
+        by_genre = cursor.fetchall()
+        cursor.close()
+        return by_genre
+
+    def count_active_borrows_by_member(self, member_id, conn):
+        cursor = conn.cursor()
+        query = "SELECT COUNT(id_member_by_borrowed) FROM books WHERE id_member_by_borrowed = %s"
+        cursor.execute(query, (member_id,))
+        books_borrowed = cursor.fetchone()
+        cursor.close()
+        return books_borrowed[0] if books_borrowed else 0
