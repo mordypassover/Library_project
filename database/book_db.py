@@ -100,6 +100,8 @@ class BooksDBManager:
 
 
     def count_by_genre(self, genre, conn):
+        if genre not in BooksDBManager.GENRE_TYPES:
+            raise TypeError(f"genre {genre} not supported")
         cursor = conn.cursor(dictionary=True)
         query = "SELECT COUNT(*) FROM books WHERE genre = %s"
         cursor.execute(query, (genre,))
